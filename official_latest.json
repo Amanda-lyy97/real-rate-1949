@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-18T15:50:55.161721+00:00",
+  "updatedAt": "2026-11-18T16:27:32.352703+00:00",
   "latestMonth": "2026-10",
   "year": 2026,
   "monthly": {
@@ -31,7 +31,7 @@
     "house": "https://www.stats.gov.cn/sj/zxfb/202611/t20261116_1965836.html",
     "m2": "http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026111315073060062/index.html",
     "gdp": "https://www.stats.gov.cn/sj/zxfb/202610/t20261020_1965658.html",
-    "gold": "local gold_monthly.csv"
+    "gold": "https://raw.githubusercontent.com/datasets/gold-prices/main/data/monthly.csv"
   },
   "notes": {
     "deposit": "0.95% 为主要银行一年期挂牌；PBOC 一年期基准为 1.50%。",
@@ -39,6 +39,6 @@
     "houseYtd": -3.6500000000000057
   },
   "errors": [],
-  "elapsed": 32.4,
+  "elapsed": 25.2,
   "status": "ok"
 }
