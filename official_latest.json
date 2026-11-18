@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-18T15:50:55.161721+00:00",
+  "latestMonth": "2026-10",
+  "year": 2026,
+  "monthly": {
+    "ym": "2026-10",
+    "cpi": 0.7,
+    "house": -3.049999999999997,
+    "m2": 7.1,
+    "m2Level": 359.06,
+    "gdp": 4.6,
+    "gdpPeriod": "2026年三季度",
+    "dep": 0.95,
+    "officialDep": 1.5,
+    "goldUsd": 4105.0,
+    "fx": 6.684
+  },
+  "annual": {
+    "year": 2026,
+    "cpi": 0.9,
+    "house": -3.6500000000000057,
+    "m2": 7.1,
+    "gdp": 4.6,
+    "dep": 0.95,
+    "cpiSrc": "NBS 年内均值",
+    "houseSrc": "70城 年内均值"
+  },
+  "sources": {
+    "cpi": "https://www.stats.gov.cn/sj/zxfb/202611/t20261109_1965795.html",
+    "house": "https://www.stats.gov.cn/sj/zxfb/202611/t20261116_1965836.html",
+    "m2": "http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026111315073060062/index.html",
+    "gdp": "https://www.stats.gov.cn/sj/zxfb/202610/t20261020_1965658.html",
+    "gold": "local gold_monthly.csv"
+  },
+  "notes": {
+    "deposit": "0.95% 为主要银行一年期挂牌；PBOC 一年期基准为 1.50%。",
+    "cpiYtd": 0.9,
+    "houseYtd": -3.6500000000000057
+  },
+  "errors": [],
+  "elapsed": 32.4,
+  "status": "ok"
+}
