@@ -1,2 +1,6 @@
 .DS_Store
 update.log
+
+.github_token
+gh_token
+github_token.txt
