@@ -2,26 +2,29 @@
 
 一个手机优先、单文件可离线打开的中国实质利率数据网站。
 
-- **主文件**：`index.html`（数据、样式、脚本全部内联，约 238 KB）
+- **主文件**：`index.html`（数据、样式、脚本全部内联，约 315 KB）
 - **数据截至**：2026 年 10 月；2026 年年度值为 1—10 月 / 前三季度年内值
 - **实时金价**：页面会尝试从 [Gold API](https://gold-api.com/) 获取国际现货价；失败时使用内置快照
-- **官方数据自动更新**：`server.py` 每 24 小时检查一次国家统计局 / 中国人民银行最新发布，页面自动同步；页面不提供手动刷新按钮
+- **官方数据自动更新**：GitHub Actions 每天北京时间 09:00 抓取国家统计局 / 中国人民银行最新发布，自动重建并发布到 GitHub Pages；电脑关机也能访问
 - **手动修订**：页面内“录入 / 修订月度数据”保存到浏览器 `localStorage`，全站图表与表格即时重算
 
-## 临时公网 HTTPS（微信可直接点开）
-
-当前公网链接写在 `public-url.txt`：
+## 正式公网地址（GitHub Pages）
 
 ```text
-https://occasions-rev-cardiovascular-throwing.trycloudflare.com/
+https://amanda-lyy97.github.io/real-rate-1949/
 ```
 
-这是 Cloudflare Quick Tunnel 的临时地址，电脑、`server.py` 和 `cloudflared` 进程需保持运行；隧道重启后地址会变化。若微信仍提示“已停止访问”，说明该临时域名被微信风险策略拦截，需要换成备案域名或国内云托管。
+- 源码仓库：https://github.com/Amanda-lyy97/real-rate-1949
+- 自动更新记录：https://github.com/Amanda-lyy97/real-rate-1949/actions
+- GitHub Pages 不依赖你的电脑，关机也能访问
+- 微信可直接打开该 HTTPS 地址
+
+旧的 Cloudflare Quick Tunnel 地址仅作临时备用，重启后可能变化；`public-url.txt` 仍记录最近一次临时地址。
 
 ### 手机直接打开
 把 `index.html` 通过 AirDrop、微信文件或网盘发到手机，用 Safari / Chrome 打开即可。页面不依赖外部 CSS/JS。
 
-### 同一 Wi-Fi 下用链接打开（推荐，带自动更新）
+### 本地预览（可选，不依赖云端）
 在本目录运行：
 
 ```bash
@@ -30,7 +33,7 @@ python3 server.py
 
 macOS 也可以直接双击 `start.command`，它会启动同一个服务。
 
-然后手机访问 `http://<电脑局域网IP>:8080/`。本机当前局域网 IP 可用 `ipconfig getifaddr en0` 查看。服务进程会每 24 小时自动检查官方数据；页面加载时也会从 `/api/latest` 同步。
+然后手机访问 `http://<电脑局域网IP>:8080/`。本机当前局域网 IP 可用 `ipconfig getifaddr en0` 查看。本地服务仍保留 24 小时自动检查；正式发布以 GitHub Pages 为准。
 
 如果只想离线阅读，也可以用 `python3 -m http.server 8080 --bind 0.0.0.0`，但此时不会自动更新。
 
@@ -106,17 +109,16 @@ macOS 也可以直接双击 `start.command`，它会启动同一个服务。
 
 ## 自动更新机制
 
-`server.py` 启动后会：
+正式站使用 GitHub Actions：
 
-1. 在后台每 24 小时运行 `update_official.py`；
+1. 每天北京时间 09:00 运行 `.github/workflows/update.yml`；
 2. 抓取国家统计局 CPI、70 城房价、GDP 发布页，以及中国人民银行 M2 报告；
 3. 把最新月份写入 `official_latest.json`，同时合并进 `data.js` 并重建 `index.html`；
-4. 页面通过 `GET /api/latest` 同步；公开页面不提供手动刷新按钮，`POST /api/refresh` 也已关闭。
+4. 自动提交到 `main` 分支，GitHub Pages 随后重新发布。
 
-接口：
+也可以在仓库的 Actions 页面手动点一次 `Run workflow`。
 
-- `GET /api/latest`：最新官方快照
-- `GET /api/status`：更新服务状态
+本地 `server.py` 仍保留旧的 24 小时检查与 `/api/latest`、`/api/status` 接口，仅用于本机预览；正式站是纯静态 GitHub Pages。
 
 注意：自动更新只覆盖 CPI、70 城房价、M2、GDP 等官方月度字段；一年期定存仍取主要银行挂牌（0.95%），金价走实时接口。生活资料价格、工资和金油比为年度参考序列，不由月度抓取自动改写。抓取失败时保留上一次快照，不会清空历史数据。
 
