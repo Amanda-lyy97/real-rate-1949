@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2eee6">
+<meta name="description" content="中国实质负利率观察站：1949—2026 年实质利率、CPI、一年期定存、M2、GDP、70城房价与黄金购买力。手机可用、可自行更新月度数据。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<title>实质负利率观察站 · 1949—2026</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#overview" aria-label="回到顶部">
+      <span class="brand-mark" aria-hidden="true">−</span>
+      <span>
+        <span class="brand-name">实质负利率观察站</span>
+        <span class="brand-sub">Real Rate Monitor / CN</span>
+      </span>
+    </a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="#formula" data-nav="formula">公式</a>
+      <a href="#annual" data-nav="annual">年度</a>
+      <a href="#monthly" data-nav="monthly">月度</a>
+      <a href="#purchasing" data-nav="purchasing">价格</a>
+      <a href="#goldoil" data-nav="goldoil">金油比</a>
+      <a href="#data" data-nav="data">数据</a>
+    </nav>
+    <div class="status-pill"><span class="live-dot"></span><span id="statusText">数据截至 2026-10</span></div>
+  </div>
+</header>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section class="wrap hero" id="overview">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">1949 — 2026 · 中国居民储蓄真实回报</div>
+        <h1>实质负利率<br><em>观察站</em><span class="thin">当存钱跑不过时代</span></h1>
+        <p class="hero-lede">
+          把一年期存款利率，减去生活成本与房价上涨，剩下的才是储蓄的<strong>真实回报</strong>。
+          这个数字为负时，存钱的人在为负债的人补贴；这个数字转正时，现金第一次重新变得“贵”起来。
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#annual">
+            查看年度曲线
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <button class="btn ghost" id="openUpdateHero" type="button">
+            更新本月数据
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="hero-note">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.2"/><path d="M8 7.2v4M8 4.8v.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span>主口径（《通论》）：实质利率 = 一年期定存 − [CPI +（M2 − GDP）]。CPI 与货币扩张作为对照口径；房价只单独列示，不进入公式。</span>
+        </div>
+      </div>
+
+      <aside class="pulse-card" aria-label="本月快照">
+        <div class="pulse-head"><span>本月快照 / Monthly pulse</span><span class="pill" id="pulseMonth">2026-10</span></div>
+        <div class="pulse-main">
+          <span class="pulse-sign" id="heroSign">−</span>
+          <span class="pulse-big" id="heroRate">2.25</span>
+          <span class="pulse-unit">%</span>
+        </div>
+        <div class="pulse-label" id="heroLabel">实质利率 · 通论口径</div>
+        <div class="pulse-divider"></div>
+        <div class="pulse-grid">
+          <div><b id="pulseCpi">+0.7%</b><span>CPI 同比</span></div>
+          <div><b id="pulseDep">0.95%</b><span>一年定存</span></div>
+          <div><b id="pulseHouse" class="neg">−3.05%</b><span>70城房价</span></div>
+        </div>
+        <div class="pulse-foot">
+          <span>货币扩张口径 <b id="pulseMoney">−1.55%</b></span>
+          <span>CPI 口径 <b id="pulseCpiReal">+0.25%</b></span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="metric-strip" id="metricStrip" aria-label="最新关键指标"></div>
+    <div class="callout" id="heroCallout">
+      <span class="mark">!</span>
+      <div id="calloutText">2026 年 10 月：通论口径为负，货币扩张口径也为负。现金正在被 CPI 与货币扩张同时挤压。</div>
+    </div>
+  </section>
+
+  <!-- ================= FORMULA ================= -->
+  <section class="wrap formula-band" id="formula">
+    <div class="formula-card">
+      <div class="formula-left">
+        <div class="eyebrow">FORMULA / 公式</div>
+        <div class="formula-eq">实质负利率 <span>⇔</span><span class="fbr"></span>实际通胀率 <b>&gt;</b> 名义利率</div>
+        <div class="formula-rows">
+          <div><span>实际通胀率</span><b>CPI 同比 + (M2 同比 − GDP 同比)</b></div>
+          <div><span>实质利率</span><b>一年期定存 − 实际通胀率</b></div>
+          <div><span>负利率幅度</span><b>实际通胀率 − 一年期定存（正值）</b></div>
+        </div>
+        <div class="formula-essence">实质负利率<b>约等于</b>货币购买力的折损率</div>
+        <p class="formula-note">依据《通论》讲课稿 PDF p294、p338：实质利率 = 名义利率 − 实质通胀；实质通胀 = 名义通胀 +（M2增速 − GDP增速）。房价权重口径仍在页面“数据”区可切换。<span id="formulaAsOf">数据截至 2026-10</span></p>
+      </div>
+      <div class="calc-card">
+        <div class="calc-head"><span>按通论口径自己算</span><span class="mono">实际通胀 = CPI + M2 − GDP</span></div>
+        <div class="calc-inputs">
+          <label>CPI 同比<input id="calcCpi" type="number" step="0.1" inputmode="decimal" aria-label="CPI同比"></label>
+          <label>一年定存<input id="calcDep" type="number" step="0.05" inputmode="decimal" aria-label="一年期定存"></label>
+          <label>M2 同比<input id="calcM2" type="number" step="0.1" inputmode="decimal" aria-label="M2同比"></label>
+          <label>GDP 同比<input id="calcGdp" type="number" step="0.1" inputmode="decimal" aria-label="GDP同比"></label>
+        </div>
+        <div class="calc-output">
+          <div><span>实质通胀</span><b id="calcInf">—</b></div>
+          <div><span>实质利率</span><b id="calcRate">—</b></div>
+        </div>
+        <div class="calc-verdict" id="calcVerdict">输入三个数字，立即判断</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ANNUAL ================= -->
+  <section class="wrap section" id="annual">
+    <div class="section-head">
+      <div class="section-kicker">01 / 年度</div>
+      <div>
+        <h2>长周期里的负利率</h2>
+        <p>从计划经济到价格闯关，从房产牛市到楼市拐点。<b>红色区间</b>是实质利率为负的年份：储蓄在悄悄缩水，负债反而被通胀奖励。</p>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <div>
+          <h3>实质利率曲线</h3>
+          <p>零线以下即实质负利率 · 单位 %</p>
+        </div>
+        <div class="segmented" id="lensTabs" role="tablist" aria-label="选择实质利率口径">
+          <button type="button" data-lens="doubleReal" class="active" role="tab" aria-selected="true">通论口径</button>
+          <button type="button" data-lens="cpiReal" role="tab" aria-selected="false">CPI 口径</button>
+          <button type="button" data-lens="moneyReal" role="tab" aria-selected="false">货币扩张</button>
+        </div>
+      </div>
+      <div class="chart-legend" id="annualLegend">
+        <span class="legend-item"><span class="legend-swatch"></span>负利率区间</span>
+        <span class="legend-item"><span class="legend-line"></span><span id="annualMainLabel">实质利率 · 通论口径</span></span>
+      </div>
+      <div class="chart-wrap" id="annualChart" role="img" aria-label="1951年以来中国实质利率年度曲线"></div>
+      <div class="chart-foot">
+        <span>横轴：年份 · 纵轴：% · <b>2026 为年内值</b> · 1949—1950 CPI 缺失，1950 年 156% 定存未入图</span>
+        <span class="pill-row" id="annualRangePills">
+          <button class="pill" data-range="1978" type="button">1978 后</button>
+          <button class="pill active" data-range="2000" type="button">2000 后</button>
+          <button class="pill" data-range="1951" type="button">全周期</button>
+        </span>
+      </div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer">CPI / GDP NBS</a> · <a href="http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html" target="_blank" rel="noopener noreferrer">M2 PBOC</a> · <a href="http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html" target="_blank" rel="noopener noreferrer">定存 PBOC</a> · 实质利率为计算值</div>
+    </div>
+
+    <div class="stat-row" id="annualStats"></div>
+
+    <div class="card table-card">
+      <div class="table-head">
+        <div>
+          <h3>年度数据表</h3>
+          <div class="hint">负值红色 · 虚线为估算 · 通论口径列优先</div>
+        </div>
+        <div class="pill-row" id="annualTablePills">
+          <button class="pill active" data-filter="all" type="button">全部</button>
+          <button class="pill" data-filter="1978" type="button">1978 后</button>
+          <button class="pill" data-filter="2000" type="button">2000 后</button>
+          <button class="pill" data-filter="negative" type="button">仅负利率</button>
+        </div>
+      </div>
+      <div class="table-scroll" id="annualTableWrap"></div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer">CPI / GDP NBS</a> · <a href="http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html" target="_blank" rel="noopener noreferrer">M2 PBOC</a> · <a href="http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html" target="_blank" rel="noopener noreferrer">定存 PBOC</a> · <a href="https://www.stats.gov.cn/sj/zxfb/" target="_blank" rel="noopener noreferrer">房价 NBS</a> · <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer">黄金 Gold.org</a> · 实质利率为计算值</div>
+      <div class="table-note">1949—1950 年 CPI 缺失；1951—1985 年为历史估算；2026 年使用 1—10 月均值。实质利率 = 定存 − CPI −（M2 − GDP），这是《通论》口径，不使用房价；1987 年约 −13.7%，来自当年 M2 25.3% 与 GDP 11.7% 的差额。房价只作为独立指标列出，不再做 75/25 加权。<a href="#sources" style="color:var(--gold)">逐项来源与查询链接 ↗</a></div>
+    </div>
+    <details class="card calc-details" id="annualCalc" open>
+      <summary>
+        <div>
+          <div class="section-kicker" style="padding-top:0;margin-bottom:5px">计算过程</div>
+          <h3>年度实质利率：逐年算式</h3>
+        </div>
+        <span class="calc-summary-hint">展开 / 收起</span>
+      </summary>
+      <div class="calc-toolbar">
+        <div class="segmented" id="calcLensTabs" aria-label="选择计算过程口径">
+          <button type="button" data-clens="doubleReal" class="active">通论口径</button>
+          <button type="button" data-clens="cpiReal">CPI 口径</button>
+          <button type="button" data-clens="moneyReal">货币口径</button>
+        </div>
+        <span class="calc-hint">按年度数据；2026 为年内值</span>
+      </div>
+      <div class="table-scroll annual-calc-full" id="annualCalcWrap"></div>
+      <div class="calc-mobile" id="annualCalcMobile"></div>
+      <div class="table-note">“补充数据”列按所选口径显示 M2/GDP 或房价。结果单位：%。1949—1950 CPI 缺失，早期 M2/GDP 缺失的年份会标注“数据不足”。</div>
+    </details>
+  </section>
+
+  <!-- ================= MONTHLY ================= -->
+  <section class="wrap section" id="monthly">
+    <div class="section-head">
+      <div class="section-kicker">02 / 月度</div>
+      <div>
+        <h2>每个月，钱在往哪走</h2>
+        <p>月度曲线把长周期拆开：政策利率的每一次下调、房价的每一次转向，都会在实质利率上留下折点。最新月份来自官方发布，也可自行录入修订。</p>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <div>
+          <h3>月度实质利率</h3>
+          <p><span id="monthlyRangeLabel">2021-11 至 2026-10</span> · 单位 %</p>
+        </div>
+        <div class="segmented" id="monthlyRangeTabs" aria-label="选择月度时间范围">
+          <button type="button" data-months="60" class="active">近 5 年</button>
+          <button type="button" data-months="180">2011 后</button>
+          <button type="button" data-months="0">全部</button>
+        </div>
+      </div>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-swatch"></span>负利率区间</span>
+        <span class="legend-item"><span class="legend-line"></span>通论口径</span>
+      </div>
+      <div class="chart-wrap" id="monthlyChart" role="img" aria-label="中国月度实质利率曲线"></div>
+      <div class="chart-foot">
+        <span>月度 CPI 与 70 城房价为官方同比；M2 为月末同比；GDP 为最近季度累计同比。</span>
+        <span><b>轻触曲线</b>查看当月全部指标</span>
+      </div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/zxfb/" target="_blank" rel="noopener noreferrer">CPI / 70城房价 NBS</a> · <a href="http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html" target="_blank" rel="noopener noreferrer">M2 PBOC</a> · 实质利率为计算值</div>
+    </div>
+
+    <div class="stat-row" id="monthlyStats"></div>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <div>
+          <h3>房价与 CPI：两条通胀线</h3>
+          <p>70 城新建商品住宅同比（中位数）与 CPI 同比 · 2011 至今</p>
+        </div>
+        <div class="chart-legend" style="margin:0">
+          <span class="legend-item"><span class="legend-line red"></span>房价</span>
+          <span class="legend-item"><span class="legend-line teal"></span>CPI</span>
+        </div>
+      </div>
+      <div class="chart-wrap" id="houseChart" role="img" aria-label="70城房价同比与CPI同比曲线"></div>
+      <div class="chart-foot"><span>房价为 70 城新建商品住宅同比的中位数，避免少数城市极值干扰；CPI 为全国同比。</span><span>单位 %</span></div>
+    </div>
+
+    <div class="card table-card">
+      <div class="table-head">
+        <div>
+          <h3>月度数据表</h3>
+          <div class="hint">最新在前 · 左右滑动看全部列</div>
+        </div>
+        <div class="pill-row" id="monthlyTablePills">
+          <button class="pill active" data-mfilter="24" type="button">近 24 月</button>
+          <button class="pill" data-mfilter="180" type="button">2011 后</button>
+          <button class="pill" data-mfilter="all" type="button">全部</button>
+          <button class="pill" data-mfilter="negative" type="button">仅负利率</button>
+        </div>
+      </div>
+      <div class="table-scroll" id="monthlyTableWrap"></div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/zxfb/" target="_blank" rel="noopener noreferrer">CPI / 70城房价 NBS</a> · <a href="http://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html" target="_blank" rel="noopener noreferrer">M2 PBOC</a> · <a href="http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html" target="_blank" rel="noopener noreferrer">定存 PBOC</a> · <a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer">GDP NBS</a> · <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer">黄金 Gold.org</a> · 实质利率为计算值</div>
+      <div class="table-note">“通论口径” = 定存 − CPI −（M2−GDP），即《通论》口径；房价只作独立指标列示，不进入实质利率。GDP 列为最近季度累计同比；黄金按当月 USD/CNY 均价折算。估算单元格以虚线下划线标示。<a href="#sources" style="color:var(--gold)">逐项来源与查询链接 ↗</a></div>
+    </div>
+  </section>
+
+  <!-- ================= PURCHASING ================= -->
+  <section class="wrap section" id="purchasing">
+    <div class="section-head">
+      <div class="section-kicker">03 / 价格</div>
+      <div>
+        <h2>米、猪肉、电价与平均工资</h2>
+        <p>三种价格的年度变化，加上每年平均工资；不合成总量、不设权重，也不计算购买力指数。</p>
+      </div>
+    </div>
+
+    <div class="card chart-card price-card">
+      <div class="card-head">
+        <div>
+          <h3>大米、猪肉、居民用电价格</h3>
+          <p>1950—2026 · 年度参考价 · 对数刻度</p>
+        </div>
+        <div class="chart-legend" style="margin:0">
+          <span class="legend-item"><span class="legend-line gold"></span>大米 元/斤</span>
+          <span class="legend-item"><span class="legend-line red"></span>猪肉 元/斤</span>
+          <span class="legend-item"><span class="legend-line teal"></span>电 元/度</span>
+        </div>
+      </div>
+      <div class="chart-wrap" id="priceChart" role="img" aria-label="1950年以来大米、猪肉、居民用电价格"></div>
+      <div class="chart-foot"><span>价格为长期参考零售价，1950—1954 年已折算为第二套人民币。</span><span>对数刻度</span></div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer">大米 / 猪肉 / 电价：NBS 统计年鉴</a> · <a href="https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html" target="_blank" rel="noopener noreferrer">平均工资：NBS 2025 公告</a></div>
+    </div>
+
+    <div class="stat-row" id="priceStats"></div>
+
+    <div class="card table-card">
+      <div class="table-head">
+        <div>
+          <h3>三种价格与平均工资</h3>
+          <div class="hint">只看大米、猪肉、电 · 左右滑动看全部列</div>
+        </div>
+      </div>
+      <div class="living-mobile" id="livingMobile"></div>
+      <div class="table-scroll living-full" id="livingTableWrap"></div>
+      <div class="src-line">来源：<a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer">大米 / 猪肉 / 电价：NBS 历年统计年鉴</a> · <a href="https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html" target="_blank" rel="noopener noreferrer">平均工资：NBS 2025 公告</a></div>
+      <div class="table-note">大米/猪肉为元/斤，电为元/度。价格为长期参考价，部分年份为整理/估算，不是官方月度发布；1950—1954 年价格已折算为第二套人民币。2026 年工资为估算（2025 年官方 129,441 元，按约 +4.3% 外推）；2026 年全年工资通常要到 2027 年才发布。价格来源：<a href="https://www.stats.gov.cn/sj/ndsj/" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">国家统计局历年《中国统计年鉴》↗</a>；工资：<a href="https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">2025 年平均工资公告 ↗</a>。</div>
+    </div>
+
+    <div class="card purchase-card" style="margin-top:14px">
+      <div class="card-head">
+        <div><h3>黄金价格</h3><p>国际金价折算 · 人民币/克 · 对数刻度</p></div>
+        <div class="segmented" id="goldTabs" aria-label="黄金价格单位">
+          <button type="button" data-gold="cny" class="active">¥/克</button>
+          <button type="button" data-gold="usd">$/盎司</button>
+        </div>
+      </div>
+      <div class="big-read"><b id="goldNow">882</b><span id="goldUnitLabel">元/克 · 2026-10 月均</span></div>
+      <p class="purchase-copy" id="goldCopy">100 元今天大约只能买到 0.11 克黄金；1950 年，同样的钱可以买到约 37 克。</p>
+      <div class="gold-live">
+        <div class="lab"><b>国际现货 · 实时</b><span id="goldLiveTime">正在获取…</span></div>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div class="val" id="goldLiveUsd">—</div>
+          <button class="icon-btn" id="refreshGold" type="button" aria-label="刷新实时金价" title="刷新实时金价">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 6.5A5.2 5.2 0 1 0 13.2 9M13 3v4h-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="chart-wrap" id="goldChart" role="img" aria-label="1950年以来黄金人民币价格"></div>
+      <div class="chart-foot"><span>1949—2001 年按国际金价与官方汇率折算；2002 年后国内金价逐步市场化。来源：<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold.org ↗</a> · <a href="https://github.com/datasets/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">历史数据集 ↗</a></span><span>对数刻度</span></div>
+    </div>
+  </section>
+
+  <!-- ================= GOLD / OIL ================= -->
+  <section class="wrap section" id="goldoil">
+    <div class="section-head">
+      <div class="section-kicker">04 / 金油比</div>
+      <div>
+        <h2>一盎司黄金，换几桶油</h2>
+        <p>金油比 = 黄金美元/盎司 ÷ WTI 原油美元/桶。它不是官方指标，而是观察黄金与工业周期相对强弱的一把尺。从 1949 年算起，黄金先被固定在 35 美元，1971 年后才真正市场化。</p>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <div>
+          <h3>金油比年度趋势 · 1949—2026</h3>
+          <p>一盎司黄金可换的 WTI 原油桶数 · 年度均价</p>
+        </div>
+        <div class="chart-legend" style="margin:0">
+          <span class="legend-item"><span class="legend-line gold"></span>金油比</span>
+          <span class="legend-item"><span class="legend-line dash"></span>1949—2025 均值</span>
+        </div>
+      </div>
+      <div class="chart-wrap" id="goldOilChart" role="img" aria-label="1949年以来金油比年度趋势"></div>
+      <div class="chart-foot"><span>黄金：国际金价年均；原油：WTI 年均。1949—1967 年黄金官价 35 美元/盎司。来源：<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer">Gold.org</a> · <a href="https://fred.stlouisfed.org/series/DCOILWTICO" target="_blank" rel="noopener noreferrer">FRED WTI</a></span><span>单位：桶 / 盎司</span></div>
+    </div>
+    <div class="stat-row" id="goldOilStats"></div>
+  </section>
+
+  <!-- ================= DATA ================= -->  <!-- ================= DATA ================= -->
+  <section class="wrap section" id="data">
+    <div class="section-head">
+      <div class="section-kicker">05 / 数据</div>
+      <div>
+        <h2>把口径摊开来看</h2>
+        <p>《通论》只给了一个实质利率口径；CPI 与货币扩张是本站另列的对照。房价是资产价格，不再塞进实质利率公式里。</p>
+      </div>
+    </div>
+
+    <div class="data-grid">
+      <div class="card method-card">
+        <h3>《通论》口径与两个对照</h3>
+        <p><b>《通论》口径（主口径，默认）</b>：实质利率 = 名义利率 − 实质通胀；实质通胀 = 名义通胀 +（M2 增速 − GDP 增速）。对应 PDF p294、p338。</p>
+        <div class="formula">实际通胀 = CPI +（M2 − GDP）<br>实质利率 = 一年定存 − 实际通胀<br><em>负值 = 实质负利率</em></div>
+        <p><b>CPI 口径（对照）</b>：只减 CPI，是教科书与统计公报最常用的算法。它没有计入 M2−GDP 的货币扩张。</p>
+        <p><b>货币扩张口径（对照）</b>：只减 M2−GDP，衡量货币相对产出的膨胀速度；它不是《通论》的完整公式。</p>
+        <p><b>房价如何处理</b>：房价是资产价格，不是《通论》公式里的通胀项。本站只把 70 城房价同比作为独立指标列示。此前本站自设过一个“CPI + 房价”加权口径，那没有《通论》依据，已移除。</p>
+        <div class="source-list" id="sourceList"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card action-card">
+          <h3>官方数据自动更新</h3>
+          <p>本站更新服务每 24 小时自动检查一次国家统计局与中国人民银行的最新发布；发现新月份会自动并入图表。页面不提供手动刷新按钮，离线打开时使用内置快照。</p>
+          <div class="auto-status" id="autoStatus">
+            <span class="auto-dot"></span>
+            <div><b>正在连接更新服务…</b><span>首次加载会尝试同步官方数据</span></div>
+          </div>
+          <div class="freshness" id="freshness"></div>
+          <div class="action-row">
+            <button class="btn ghost" id="openUpdate" type="button">录入 / 修订月度数据</button>
+            <button class="btn ghost" id="exportAnnual" type="button">导出年度 CSV</button>
+            <button class="btn ghost" id="exportMonthly" type="button">导出月度 CSV</button>
+            <button class="btn ghost" id="exportJson" type="button">备份 JSON</button>
+            <label class="btn ghost" style="cursor:pointer">导入备份<input type="file" id="importJson" accept="application/json,.json" hidden></label>
+          </div>
+          <div class="disclaimer">自动更新只覆盖官方月度字段（CPI、70 城房价、M2、GDP）；一年期定存取主要银行挂牌 0.95%，PBOC 一年期基准为 1.50%。录入器保存在当前浏览器（localStorage），清除数据或换设备后需重新导入。2026 年为 1—10 月／前三季度年内值。数据边界：1949—1950 年 CPI 缺失；1951—1985 年为历史估算；1987—2010 年房价为年度估算。</div>
+        </div>
+
+        <div class="card action-card">
+          <h3>发布节奏</h3>
+          <p>按月跟踪这四组数据，基本就能复现本站的更新：</p>
+          <ul style="margin:0;padding-left:16px;font-size:10.5px;color:var(--muted);line-height:1.9">
+            <li><b>CPI</b>：国家统计局，每月 9—10 日左右。</li>
+            <li><b>70 城房价</b>：国家统计局，每月 15—16 日左右。</li>
+            <li><b>M2 / 社融</b>：中国人民银行，每月 10—15 日左右。</li>
+            <li><b>GDP</b>：季度发布，1、4、7、10 月中下旬。</li>
+            <li><b>金价</b>：本站可一键获取国际现货价。</li>
+          </ul>
+          <div class="disclaimer">建议每月 16 日后统一录入上月数据；季度 GDP 可在发布后补录。所有来源链接见左侧。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card tonglun-card">
+      <div class="tonglun-head">
+        <div>
+          <div class="section-kicker" style="padding-top:0;margin-bottom:6px">《通论》摘记</div>
+          <h3>为什么他坚持用“实质通胀”，而不是 CPI</h3>
+        </div>
+        <span class="mono" style="font-size:8px;color:var(--muted)">PDF PAGE 80 / 274 / 294 / 295 / 338</span>
+      </div>
+      <div class="tonglun-grid">
+        <article class="tonglun-item">
+          <div class="tonglun-quote">实质利率 = 名义利率 − 实质通货膨胀；<br>实质通货膨胀 = 名义通胀 +（M2增长率 − GDP增长率）</div>
+          <div class="tonglun-cite">PDF p294、p338</div>
+          <p>这就是本站“通论口径”的来源：把 CPI 之外的货币扩张也计入实际通胀。p338 又写成“名义利率 − 通货膨胀 −（GDP − M2增速）”，两项等价。</p>
+        </article>
+        <article class="tonglun-item">
+          <div class="tonglun-quote">实质负利率到了 10% 以上，杠杆会增加到你想象不到的程度。</div>
+          <div class="tonglun-cite">PDF p80</div>
+          <p>他把实质负利率当成杠杆与资产泡沫的驱动变量，而不是一个孤立的存款收益数字；p127 还称 2008—2012 年中国出现过“超级实质负利率、恶性通胀”。</p>
+        </article>
+        <article class="tonglun-item">
+          <div class="tonglun-quote">不能超过负的 5%，最好控制在负的 2% 以内。</div>
+          <div class="tonglun-cite">PDF p295、p386</div>
+          <p>他对实质负利率给出了政策区间：-2%—+2% 相对合理，-5% 是警戒线，两位数负利率会形成“恶性通货膨胀税”。</p>
+        </article>
+        <article class="tonglun-item">
+          <div class="tonglun-quote">通货膨胀的影响包括所有生活成本，比如房价和房租、电价、水费、煤气费、交通费用。</div>
+          <div class="tonglun-cite">PDF p274</div>
+          <p>这是本站保留电价等分项价格的依据：单看 CPI 不够，还要看货币工资能覆盖多少真实生活成本；但不再合成总量。</p>
+        </article>
+      </div>
+      <div class="tonglun-note">页码为所提供 PDF 的页面序号，不是纸质书页码。以上为短句摘录与转述，用于说明本站口径，不替代原讲稿。</div>
+    </div>
+
+    <div class="card source-card" id="sources">
+      <div class="source-head">
+        <div>
+          <div class="section-kicker" style="padding-top:0;margin-bottom:6px">数据来源</div>
+          <h3>每个数据，后面都给出处</h3>
+        </div>
+        <span class="mono" style="font-size:8px;color:var(--muted)">SOURCE MATRIX</span>
+      </div>
+      <div class="table-scroll source-full" id="sourceMatrix"></div>
+      <div class="source-mobile" id="sourceMatrixMobile"></div>
+      <div class="source-foot">链接指向官方查询页或长期序列页；“估算/整理”表示该段没有可直接下载的官方月度序列，本站按相邻年份或历史资料补齐，并在表格单元格用虚线下划线标示。</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-brand">实质负利率观察站</div>
+      <div>用公开数据检验“存钱是否正在变穷”。不构成投资建议。</div>
+    </div>
+    <div class="footer-links">
+      <a href="#annual">年度</a><a href="#monthly">月度</a><a href="#purchasing">价格</a><a href="#data">数据</a>
+    </div>
+    <div class="footer-meta">
+      <div>DATA AS OF <span id="footerDate">2026-10</span> · GOLD <span id="footerGold">LIVE</span></div>
+      <div>BUILT <span class="red">2026-11-18</span> · STATIC / MOBILE-FIRST</div>
+    </div>
+  </div>
+</footer>
+
+<nav class="mobile-nav" aria-label="移动端导航">
+  <a href="#overview" data-nav="overview" class="active">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.2 8 3l5.5 5.2M4 7v6h8V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>概览</span>
+  </a>
+  <a href="#annual" data-nav="annual">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 13.5h11M4 11V6m4 5V3m4 8V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span>年度</span>
+  </a>
+  <a href="#monthly" data-nav="monthly">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3v10h10M5 10l2.5-3 2 1.5L13 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>月度</span>
+  </a>
+  <a href="#purchasing" data-nav="purchasing">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.8" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.8v6.4M6.3 6.2h2.6a1.2 1.2 0 0 1 0 2.4H6.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span>价格</span>
+  </a>
+  <a href="#goldoil" data-nav="goldoil">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.8" stroke="currentColor" stroke-width="1.2"/><path d="M5 10.5c2.5-.5 3.5-2.5 4-5M5.2 6.2h5.6" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/></svg>
+    <span>金油比</span>
+  </a>
+  <a href="#data" data-nav="data">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><ellipse cx="8" cy="4.2" rx="5" ry="2" stroke="currentColor" stroke-width="1.2"/><path d="M3 4.2v7.6c0 1.1 2.2 2 5 2s5-.9 5-2V4.2M3 8c0 1.1 2.2 2 5 2s5-.9 5-2" stroke="currentColor" stroke-width="1.2"/></svg>
+    <span>数据</span>
+  </a>
+</nav>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<section class="sheet" id="updateSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-head">
+    <div>
+      <h3 id="sheetTitle">更新月度数据</h3>
+      <p>保存到本机 · 图表与表格即时重算</p>
+    </div>
+    <button class="sheet-close" id="closeSheet" type="button" aria-label="关闭">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <div class="form-grid">
+      <div class="field full">
+        <label for="fMonth">月份</label>
+        <input id="fMonth" type="month" min="2000-01" max="2026-12">
+      </div>
+      <div class="field"><label for="fCpi">CPI 同比 <span class="unit">%</span></label><input id="fCpi" type="number" step="0.1" inputmode="decimal" placeholder="0.7"></div>
+      <div class="field"><label for="fDep">一年期定存 <span class="unit">%</span></label><input id="fDep" type="number" step="0.05" inputmode="decimal" placeholder="0.95"></div>
+      <div class="field"><label for="fHouse">70城新房同比 <span class="unit">%</span></label><input id="fHouse" type="number" step="0.1" inputmode="decimal" placeholder="-3.1"></div>
+      <div class="field"><label for="fM2">M2 同比 <span class="unit">%</span></label><input id="fM2" type="number" step="0.1" inputmode="decimal" placeholder="7.1"></div>
+      <div class="field"><label for="fGdp">GDP 累计同比 <span class="unit">%</span></label><input id="fGdp" type="number" step="0.1" inputmode="decimal" placeholder="4.6"></div>
+      <div class="field"><label for="fGold">黄金 <span class="unit">USD/盎司</span></label><input id="fGold" type="number" step="1" inputmode="decimal" placeholder="4105"></div>
+      <div class="field full"><label for="fFx">USD/CNY <span class="unit">留空则使用当月均值</span></label><input id="fFx" type="number" step="0.001" inputmode="decimal" placeholder="6.684"></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn" id="saveMonth" type="button">保存并重算</button>
+      <button class="btn ghost" id="clearMonth" type="button">清除该月修订</button>
+    </div>
+    <div class="sheet-note">房价同比填百分比数值（如 −3.1 填 -3.1）。保存后该月会覆盖内置月度值；年度官方值保持不变。若要恢复，使用“清除该月修订”。</div>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
