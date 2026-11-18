@@ -1145,6 +1145,9 @@
   function apiBase() {
     return location.protocol === 'file:' ? 'http://127.0.0.1:8080' : '';
   }
+  function isStaticHost() {
+    return /\.github\.io$/i.test(location.hostname) || /\.pages\.dev$/i.test(location.hostname);
+  }
   function apiTime(iso) {
     if (!iso) return '—';
     const d = new Date(iso);
@@ -1154,6 +1157,11 @@
   function renderAutoStatus(remote, mode) {
     const el = $('#autoStatus');
     if (!el) return;
+    if (mode === 'static') {
+      el.className = 'auto-status synced';
+      el.innerHTML = '<span class="auto-dot"></span><div><b>GitHub Pages 静态版</b><span>每日北京时间 09:00 由 GitHub Actions 自动重建，电脑关机也能访问</span><div class="auto-src"><a href="https://github.com/Amanda-lyy97/real-rate-1949/actions" target="_blank" rel="noopener noreferrer">查看更新记录 ↗</a><a href="https://github.com/Amanda-lyy97/real-rate-1949" target="_blank" rel="noopener noreferrer">源码仓库 ↗</a></div></div>';
+      return;
+    }
     if (mode === 'busy') {
       el.className = 'auto-status';
       el.innerHTML = '<span class="auto-dot"></span><div><b>正在抓取官方数据…</b><span>国家统计局 / 中国人民银行</span></div>';
@@ -1176,6 +1184,10 @@
     }
   }
   async function loadRemoteLatest(manual) {
+    if (isStaticHost()) {
+      renderAutoStatus(null, 'static');
+      return true;
+    }
     try {
       const res = await fetch(apiBase() + '/api/latest?ts=' + Date.now(), { cache: 'no-store' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
