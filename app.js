@@ -1003,7 +1003,7 @@
     const date = d && d.asOf ? d.asOf : (annual ? annual.year + ' 年度' : '—');
     $('#dailyRatioDate').textContent = live ? ('每日更新 · ' + date) : ('年度参考 · ' + date + ' · 等待每日价格');
     $('#dailyOilSrc').innerHTML = live
-      ? '<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold.org</a> · <a href="https://fred.stlouisfed.org/series/DCOILWTICO" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">FRED WTI</a>'
+      ? '<a href="https://gold-api.com/" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold API</a> · <a href="https://www.cnbc.com/quotes/@CL.1" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">CNBC WTI</a>'
       : '年度均价参考';
   }
 
@@ -1119,7 +1119,7 @@
       ['一年期定存', 'PBOC 基准利率历史；2015 年后取主要银行一年期挂牌利率（当前 0.95%）', [['PBOC 利率历史', 'http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html']], '1950—2026'],
       ['平均工资', '国家统计局城镇非私营单位就业人员年平均工资；2026 为估算', [['2025 年平均工资公告', 'https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html']], '1950—2026'],
       ['大米 / 猪肉 / 居民用电', '国家统计局历年《中国统计年鉴》及地方价格资料；长周期零售价为整理/估算', [['NBS 统计年鉴', 'https://www.stats.gov.cn/sj/ndsj/']], '1950—2026'],
-      ['每日金油比', '黄金现货用 Gold API；WTI 用 FRED / Yahoo 最近日收盘；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '每日'],
+      ['每日金油比', '黄金现货用 Gold API；WTI 用 CNBC 最近价；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['CNBC WTI', 'https://www.cnbc.com/quotes/@CL.1']], '每日'],
       ['黄金价格', 'Gold.org / LBMA 历史金价；人民币价格按当年 USD/CNY 折算', [['Gold.org', 'https://www.gold.org/goldhub/data/gold-prices'], ['历史金价数据集', 'https://github.com/datasets/gold-prices']], '1949—2026'],
       ['WTI 原油', 'FRED DCOILWTICO 年度均价', [['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '1949—2026'],
       ['USD/CNY 汇率', 'FRED DEXCHUS 年度均价；早期为官方汇率', [['FRED 汇率', 'https://fred.stlouisfed.org/series/DEXCHUS']], '1949—2026'],
