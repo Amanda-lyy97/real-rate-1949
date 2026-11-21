@@ -1,8 +1,9 @@
 {
-  "asOf": "2026 年度",
-  "goldUsd": 4507.3,
-  "oilUsd": 86.69,
-  "ratio": 52.0,
-  "live": false,
-  "source": "年度均价参考，等待每日更新"
+  "asOf": "2026-11-21",
+  "goldUsd": 3539.0,
+  "oilUsd": 83.62,
+  "ratio": 42.32,
+  "live": true,
+  "source": "Gold API + CNBC WTI",
+  "goldAt": "2026-11-21T15:42:38Z"
 }
