@@ -47,6 +47,24 @@
     goldLog: true,
   };
 
+  const MCD_WINGS = [
+    { year: 1998, price: null, kind: '上市', note: '麦辣鸡翅 1998 年上市；1990—1997 年无此产品', url: 'https://www.mcdonalds.com.cn/news/Spicy-McWings-story', src: '麦当劳中国' },
+    { year: 1999, price: 7, kind: '报道', note: '深圳，一对 7 元', url: 'http://news.sina.com.cn/society/1999-8-7/4038.html', src: '新浪/中新社 1999-08-07' },
+    { year: 2010, price: 7, kind: '报道', note: '常规价 7 元；同期促销 5 元', url: 'https://www.bjnews.com.cn/detail/155143324214949.html', src: '新京报 2010-02-23' },
+    { year: 2011, price: 9, kind: '报道', note: '7 → 9 元', url: 'https://news.sina.com.cn/o/2011-07-18/090022832332.shtml', src: '新浪 2011-07-18' },
+    { year: 2013, price: 9, kind: '报道', note: '8 → 9 元', url: 'https://www.ijjnews.com/industry/system/2013/01/08/010019480.shtml', src: '晋江新闻网 2013-01-08' },
+    { year: 2014, price: 9, kind: '报道', note: '北京，8 → 9 元', url: 'https://xinm123.nfncb.cn/html/food-enterprise/222597.html', src: '南方农村报 2014-04-09' },
+    { year: 2015, price: 8, kind: '菜单', note: '天津菜单，4 块 16 元 → 8 元/对；城市差异', url: 'https://m.tj.bendibao.com/meishi/62748_2.shtm', src: '天津本地宝 2015 菜单' },
+    { year: 2016, price: 9, kind: '菜单', note: '4 块 18 元 → 9 元/对', url: 'http://mp.weixin.qq.com/s?__biz=MzI3ODEzMDk3Mw==&mid=2667607873&idx=1&sn=e4071cf466fc7379fead153866346589', src: '微信菜单攻略 2016-10-29' },
+    { year: 2020, price: 9, kind: '菜单', note: '菜单页：9 元/2 个', url: 'https://page.sm.cn/blm/midpage-317/index?id=10_19aeee39819904138bfa2783a9a08563', src: '菜单页 2020-08-20' },
+    { year: 2021, price: 13, kind: '报道', note: '12 → 13 元', url: 'https://m.easteat.com/new/detail/7011', src: '东方美食 2021-12-28' },
+    { year: 2022, price: 13, kind: '报道', note: '13 元', url: 'https://kan.china.com/article/1347675_3.html', src: '时代周报 2022-02-28' },
+    { year: 2023, price: 14, kind: '报道', note: '13.5 → 14 元', url: 'https://www.jiemian.com/article/10599114.html', src: '界面新闻 2023-12-27' },
+    { year: 2024, price: 15, kind: '推断', note: '由 2025 年“15 → 16”反推，非当年直接报价', url: 'https://m.10jqka.com.cn/20251215/c673222943.shtml', src: '南方都市报 2025-12-15（反推依据）' },
+    { year: 2025, price: 16, kind: '报道', note: '15 → 16 元', url: 'https://m.10jqka.com.cn/20251215/c673222943.shtml', src: '南方都市报 2025-12-15' },
+    { year: 2026, price: 16, kind: '参考', note: '截至 2025.12 后；门店价可能不同', url: 'https://www.mcdonalds.com.cn/', src: '麦当劳中国（门店价为准）' },
+  ];
+
   const LENS = {
     cpiReal: { label: '实质利率 · CPI 口径', short: 'CPI 口径' },
     moneyReal: { label: '实质利率 · 货币扩张', short: '货币扩张' },
@@ -818,6 +836,61 @@
     $('#goldCopy').textContent = '100 元今天大约只能买到 ' + (grams ? grams.toFixed(2) : '—') + ' 克黄金；1950 年，同样的钱可以买到约 ' + grams1950.toFixed(0) + ' 克。';
   }
 
+  function renderMcd() {
+    const rows = MCD_WINGS.slice();
+    const first = rows.find(r => isNum(r.price));
+    const cur = rows.filter(r => isNum(r.price)).slice(-1)[0];
+    const idx = cur.price / first.price * 100;
+    $('#mcdNow').textContent = fmt(cur.price, 0);
+    $('#mcdIndex').textContent = '1999 = 100 → ' + idx.toFixed(0);
+    let html = '<table><thead><tr><th>年份</th><th>一对价格</th><th>指数</th><th>性质</th><th>来源 / 备注</th></tr></thead><tbody>';
+    rows.forEach(r => {
+      const price = isNum(r.price) ? '¥' + fmt(r.price, 0) : '—';
+      const index = isNum(r.price) ? (r.price / first.price * 100).toFixed(0) : '—';
+      const kindClass = r.kind === '推断' ? ' style="color:var(--gold)"' : '';
+      html += '<tr><td>' + r.year + '</td><td>' + price + '</td><td>' + index + '</td><td' + kindClass + '>' + r.kind + '</td>' +
+        '<td><a href="' + r.url + '" target="_blank" rel="noopener noreferrer">' + r.src + ' ↗</a><br><span style="color:var(--muted-2)">' + r.note + '</span></td></tr>';
+    });
+    html += '</tbody></table>';
+    $('#mcdTableWrap').innerHTML = html;
+    $('#mcdMobile').innerHTML = rows.map(r => {
+      const price = isNum(r.price) ? '¥' + fmt(r.price, 0) : '—';
+      return '<div class="mcd-mobile-card"><div class="mm-head"><b>' + r.year + '</b><span>' + price + ' / 对</span></div>' +
+        '<p>' + r.kind + ' · ' + r.note + '</p>' +
+        '<a href="' + r.url + '" target="_blank" rel="noopener noreferrer">' + r.src + ' ↗</a></div>';
+    }).join('');
+  }
+
+  function renderMcdChart() {
+    const el = $('#mcdChart');
+    if (!el) return;
+    const rows = MCD_WINGS.filter(r => isNum(r.price));
+    drawChart(el, {
+      rows,
+      series: [{ key: 'price', label: '一对价格 元', color: '#b23b2e', area: true, width: 2 }],
+      area: true,
+      areaColor: '#b23b2e',
+      shadeNegative: false,
+      xType: 'year',
+      xStep: 5,
+      yMin: 0,
+      yMax: 18,
+      yStep: 2,
+      events: [
+        { year: 1999, label: '7 元' },
+        { year: 2011, label: '9 元' },
+        { year: 2021, label: '13 元' },
+        { year: 2025, label: '16 元' },
+      ],
+      compactEvents: [1999, 2011, 2021, 2025],
+      ariaLabel: '麦当劳麦辣鸡翅一对价格 1999-2026',
+      tooltip: (r) => '<b>' + r.year + ' 年</b>' +
+        '<div class="tip-row"><span>一对价格</span><em>¥' + fmt(r.price, 0) + '</em></div>' +
+        '<div class="tip-row"><span>性质</span><em>' + r.kind + '</em></div>' +
+        '<div class="tip-row"><span>备注</span><em>' + r.note + '</em></div>'
+    });
+  }
+
   function renderPriceChart() {
     const el = $('#priceChart');
     if (!el) return;
@@ -993,6 +1066,7 @@
     renderMonthlyChart();
     renderHouseChart();
     renderPriceChart();
+    renderMcdChart();
     renderGoldChart();
     renderGoldOilChart();
   }
@@ -1005,6 +1079,7 @@
     renderMonthlyStats();
     renderMonthlyTable();
     renderPurchase();
+    renderMcd();
     renderGoldOilStats();
     renderFreshness();
     renderGoldLive();
