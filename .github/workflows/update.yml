@@ -2,7 +2,6 @@ name: Update official data
 
 on:
   schedule:
-    # 01:00 UTC = 09:00 Asia/Shanghai, once a day
     - cron: '0 1 * * *'
   workflow_dispatch:
 
@@ -17,31 +16,22 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
+      - run: pip install -r requirements.txt
       - name: Fetch official data and rebuild
         run: python update_official.py
-
+      - name: Fetch daily gold and WTI
+        continue-on-error: true
+        run: python update_daily.py
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data.js official_latest.json annual.csv monthly.csv living.csv gold_oil.csv
-          if git diff --cached --quiet; then
-            echo "No data changes"
-          else
-            git commit -m "chore: update official data $(date -u +%F)"
-            git push
-          fi
+          git add index.html data.js official_latest.json annual.csv monthly.csv living.csv gold_oil.csv daily_market.json
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "chore: update data $(date -u +%F)"; git push; fi
