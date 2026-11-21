@@ -708,6 +708,73 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
 .sm-links span{font-size:7.5px;color:var(--muted-2)}
 @media(max-width:700px){.source-full{display:none}.source-mobile{display:grid;gap:7px}}
 
+/* ---------- McDonald's wings index ---------- */
+.mcd-card{padding:23px 23px 16px;margin-bottom:14px}
+#mcdChart{min-height:280px}
+#mcdTableWrap table{min-width:760px}
+#mcdTableWrap td{font-size:9px;vertical-align:top}
+#mcdTableWrap td a{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(169,122,36,.4)}
+#mcdTableWrap td a:hover{text-decoration:underline}
+.mcd-mobile{display:none;gap:7px}
+.mcd-mobile-card{border:1px solid var(--line-soft);border-radius:10px;padding:9px 10px;background:rgba(246,241,231,.45)}
+.mcd-mobile-card .mm-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.mcd-mobile-card .mm-head b{font-family:var(--mono);font-size:10px}
+.mcd-mobile-card .mm-head span{font-family:var(--mono);font-size:10px;color:var(--ink)}
+.mcd-mobile-card p{font-size:8px;color:var(--muted);line-height:1.7;margin:4px 0 0}
+.mcd-mobile-card a{font-family:var(--mono);font-size:7.5px;color:var(--gold);text-decoration:none}
+@media(max-width:700px){
+  .mcd-card{padding:16px 14px 12px;border-radius:16px}
+  #mcdTableWrap{display:none}
+  .mcd-mobile{display:grid}
+  #mcdChart{min-height:260px}
+}
+#mcdTableWrap{max-height:520px;overflow:auto}
+.mcd-mobile{max-height:520px;overflow:auto}
+
+/* ---------- MCD reference photos ---------- */
+.mcd-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.mcd-gallery figure{margin:0;border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;background:rgba(246,241,231,.45)}
+.mcd-gallery img{display:block;width:100%;height:220px;object-fit:cover}
+.mcd-gallery figcaption{font-size:8px;line-height:1.65;color:var(--muted);padding:8px 9px}
+.mcd-gallery figcaption b{color:var(--ink-2)}
+@media(max-width:700px){.mcd-gallery{grid-template-columns:1fr}.mcd-gallery img{height:auto;max-height:320px;object-fit:contain;background:#fff}}
+
+/* ---------- compact McD charts / sources ---------- */
+.mcd-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.mcd-chart-box{border:1px solid var(--line-soft);border-radius:12px;padding:11px 11px 7px;background:rgba(246,241,231,.35)}
+.mcd-chart-title{font-family:var(--serif);font-size:15px;margin-bottom:4px}
+.mcd-chart-box .chart-foot{margin-top:2px}
+.mcd-source-details{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:9px}
+.mcd-source-details summary{cursor:pointer;font-size:9px;color:var(--muted);font-family:var(--mono);letter-spacing:.03em}
+.mcd-source-list{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 14px;margin-top:8px}
+.mcd-source-row{display:grid;grid-template-columns:36px 1fr;gap:5px;font-size:8px;line-height:1.7;border-bottom:1px dotted var(--line-soft);padding:2px 0}
+.mcd-source-row b{font-family:var(--mono);font-weight:500;color:var(--ink-2)}
+.mcd-source-row a{color:var(--gold);text-decoration:none}
+.mcd-source-row a:hover{text-decoration:underline}
+.mcd-source-row .imglink{color:var(--red);margin-left:4px}
+@media(max-width:700px){.mcd-charts{grid-template-columns:1fr}.mcd-source-list{grid-template-columns:1fr}#mcdPriceChart,#mcdHundredChart{min-height:250px}}
+
+/* ---------- daily gold/oil ratio ---------- */
+.daily-oil-card{padding:22px 23px 15px;margin-bottom:14px;border-left:2px solid var(--gold)}
+.daily-oil-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.daily-oil-head h3{font-family:var(--serif);font-size:24px;margin:0;letter-spacing:-.02em}
+.daily-oil-head p{font-size:9px;color:var(--muted);margin:5px 0 0}
+.daily-oil-big{text-align:right;flex:0 0 auto}
+.daily-oil-big b{font-family:var(--serif);font-size:52px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.daily-oil-big span{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+.daily-oil-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.daily-oil-grid div{border:1px solid var(--line-soft);border-radius:10px;padding:8px 10px;background:rgba(246,241,231,.5)}
+.daily-oil-grid span{display:block;font-size:7.5px;color:var(--muted)}
+.daily-oil-grid b{display:block;font-family:var(--mono);font-size:12px;font-weight:500;margin-top:3px;color:var(--ink-2)}
+.daily-oil-card .chart-foot{margin-top:9px}
+@media(max-width:700px){
+  .daily-oil-card{padding:15px 14px 12px;border-radius:16px}
+  .daily-oil-head{flex-direction:column;gap:7px}
+  .daily-oil-big{text-align:left}
+  .daily-oil-big b{font-size:44px}
+  .daily-oil-grid{grid-template-columns:1fr 1fr;gap:6px}
+}
+
 </style>
 </head>
 <body>
@@ -2300,7 +2367,7 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
     const date = d && d.asOf ? d.asOf : (annual ? annual.year + ' 年度' : '—');
     $('#dailyRatioDate').textContent = live ? ('每日更新 · ' + date) : ('年度参考 · ' + date + ' · 等待每日价格');
     $('#dailyOilSrc').innerHTML = live
-      ? '<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold.org</a> · <a href="https://fred.stlouisfed.org/series/DCOILWTICO" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">FRED WTI</a>'
+      ? '<a href="https://gold-api.com/" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold API</a> · <a href="https://www.cnbc.com/quotes/@CL.1" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">CNBC WTI</a>'
       : '年度均价参考';
   }
 
@@ -2416,7 +2483,7 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
       ['一年期定存', 'PBOC 基准利率历史；2015 年后取主要银行一年期挂牌利率（当前 0.95%）', [['PBOC 利率历史', 'http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html']], '1950—2026'],
       ['平均工资', '国家统计局城镇非私营单位就业人员年平均工资；2026 为估算', [['2025 年平均工资公告', 'https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html']], '1950—2026'],
       ['大米 / 猪肉 / 居民用电', '国家统计局历年《中国统计年鉴》及地方价格资料；长周期零售价为整理/估算', [['NBS 统计年鉴', 'https://www.stats.gov.cn/sj/ndsj/']], '1950—2026'],
-      ['每日金油比', '黄金现货用 Gold API；WTI 用 FRED / Yahoo 最近日收盘；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '每日'],
+      ['每日金油比', '黄金现货用 Gold API；WTI 用 CNBC 最近价；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['CNBC WTI', 'https://www.cnbc.com/quotes/@CL.1']], '每日'],
       ['黄金价格', 'Gold.org / LBMA 历史金价；人民币价格按当年 USD/CNY 折算', [['Gold.org', 'https://www.gold.org/goldhub/data/gold-prices'], ['历史金价数据集', 'https://github.com/datasets/gold-prices']], '1949—2026'],
       ['WTI 原油', 'FRED DCOILWTICO 年度均价', [['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '1949—2026'],
       ['USD/CNY 汇率', 'FRED DEXCHUS 年度均价；早期为官方汇率', [['FRED 汇率', 'https://fred.stlouisfed.org/series/DEXCHUS']], '1949—2026'],
