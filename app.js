@@ -50,6 +50,9 @@
   const MCD_WINGS = [
     { year: 1998, price: null, kind: '上市', note: '麦辣鸡翅 1998 年上市；1990—1997 年无此产品', url: 'https://www.mcdonalds.com.cn/news/Spicy-McWings-story', src: '麦当劳中国' },
     { year: 1999, price: 7, kind: '报道', note: '深圳，一对 7 元', url: 'http://news.sina.com.cn/society/1999-8-7/4038.html', src: '新浪/中新社 1999-08-07' },
+    { year: 2000, price: 5, kind: '用户确认', note: '用户确认 2000—2003 年 5 元/对；参考 2003 年菜单照片', url: 'https://xhslink.cn/o/AvZ7ycvmBJE', src: '小红书 2003 菜单（参考）', image: 'assets/mcd/2003-menu.jpg' },
+    { year: 2001, price: 5, kind: '用户确认', note: '用户确认 2000—2003 年 5 元/对；参考 2003 年菜单照片', url: 'https://xhslink.cn/o/AvZ7ycvmBJE', src: '小红书 2003 菜单（参考）', image: 'assets/mcd/2003-menu.jpg' },
+    { year: 2002, price: 5, kind: '用户确认', note: '用户确认 2000—2003 年 5 元/对；参考 2003 年菜单照片', url: 'https://xhslink.cn/o/AvZ7ycvmBJE', src: '小红书 2003 菜单（参考）', image: 'assets/mcd/2003-menu.jpg' },
     { year: 2003, price: 5, kind: '菜单照片', note: '小红书菜单照片：麦辣鸡翅（2块）¥5.00/对', url: 'https://xhslink.cn/o/AvZ7ycvmBJE', src: '小红书 2003 麦当劳菜单照片', image: 'assets/mcd/2003-menu.jpg' },
     { year: 2008, price: 6, kind: '菜单照片', note: '2008 尊享卡：加 ¥6 得 2 块麦辣鸡翅；用户确认 08/09 常规价 6 元', url: 'https://xhslink.cn/o/2IKjITKP07o', src: '小红书 2008 麦当劳尊享卡', image: 'assets/mcd/2008-card.jpg' },
     { year: 2009, price: 6, kind: '延续', note: '用户确认 2009 年 6 元；按 2008 年价格延续', url: 'https://xhslink.cn/o/2IKjITKP07o', src: '2008 尊享卡（延续依据）' },
@@ -881,34 +884,61 @@
     const ppIndex = curPP / firstPP * 100;
     $('#mcdNow').textContent = curPP.toFixed(2);
     $('#mcdIndex').textContent = '1999 年：' + firstPP.toFixed(1) + ' 对 · 购买力 ' + (ppIndex < 100 ? '−' : '+') + Math.abs(100 - ppIndex).toFixed(0) + '%';
-    let html = '<table><thead><tr><th>年份</th><th>一对价格</th><th>100 元买几对</th><th>购买力指数</th><th>性质</th><th>来源 / 备注</th></tr></thead><tbody>';
-    rows.forEach(r => {
+    $('#mcdSourceList').innerHTML = rows.map(r => {
       const pp = 100 / r.price;
-      const index = pp / firstPP * 100;
-      const kindClass = (r.kind === '推断' || r.kind === '延续') ? ' style="color:var(--gold)"' : '';
-      html += '<tr><td>' + r.year + '</td><td>¥' + fmt(r.price, 0) + '</td><td class="strong">' + pp.toFixed(2) + '</td><td>' + index.toFixed(0) + '</td><td' + kindClass + '>' + r.kind + '</td>' +
-        '<td><a href="' + r.url + '" target="_blank" rel="noopener noreferrer">' + r.src + ' ↗</a><br><span style="color:var(--muted-2)">' + r.note + '</span>' + (r.image ? '<br><a href="' + r.image + '" target="_blank" rel="noopener noreferrer">查看菜单照片 ↗</a>' : '') + '</td></tr>';
-    });
-    html += '</tbody></table>';
-    $('#mcdTableWrap').innerHTML = html;
-    $('#mcdMobile').innerHTML = rows.map(r => {
-      const pp = 100 / r.price;
-      return '<div class="mcd-mobile-card"><div class="mm-head"><b>' + r.year + '</b><span>100 元买 ' + pp.toFixed(2) + ' 对</span></div>' +
-        '<p>一对 ¥' + fmt(r.price, 0) + ' · ' + r.kind + ' · ' + r.note + '</p>' +
-        '<a href="' + r.url + '" target="_blank" rel="noopener noreferrer">' + r.src + ' ↗</a>' + (r.image ? ' · <a href="' + r.image + '" target="_blank" rel="noopener noreferrer">菜单照片 ↗</a>' : '') + '</div>';
+      return '<div class="mcd-source-row"><b>' + r.year + '</b><div>' +
+        '<a href="' + r.url + '" target="_blank" rel="noopener noreferrer">' + r.src + ' ↗</a>' +
+        (r.image ? ' <a class="imglink" href="' + r.image + '" target="_blank" rel="noopener noreferrer">参考图 ↗</a>' : '') +
+        '<br><span style="color:var(--muted-2)">' + r.note + ' · ' + pp.toFixed(2) + ' 对/100 元</span></div></div>';
     }).join('');
   }
 
-  function renderMcdChart() {
-    const el = $('#mcdChart');
+  function mcdTooltip(r) {
+    const pp = 100 / r.price;
+    return '<b>' + r.year + ' 年</b>' +
+      '<div class="tip-row"><span>一对价格</span><em>¥' + fmt(r.price, 0) + '</em></div>' +
+      '<div class="tip-row"><span>100 元买</span><em>' + pp.toFixed(2) + ' 对</em></div>' +
+      '<div class="tip-row"><span>性质</span><em>' + r.kind + '</em></div>' +
+      '<div class="tip-row"><span>来源</span><em><a href="' + r.url + '" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">' + r.src + ' ↗</a></em></div>' +
+      (r.image ? '<div class="tip-row"><span>参考图</span><em><a href="' + r.image + '" target="_blank" rel="noopener noreferrer" style="color:var(--red)">菜单照片 ↗</a></em></div>' : '');
+  }
+
+  function renderMcdPriceChart() {
+    const el = $('#mcdPriceChart');
+    if (!el) return;
+    const rows = mcdAnnualRows();
+    drawChart(el, {
+      rows,
+      series: [{ key: 'price', label: '一对价格 元', color: '#b23b2e', area: true, width: 2 }],
+      area: true,
+      areaColor: '#b23b2e',
+      shadeNegative: false,
+      xType: 'year',
+      xStep: 5,
+      yMin: 0,
+      yMax: 18,
+      yStep: 2,
+      events: [
+        { year: 1999, label: '7 元' },
+        { year: 2003, label: '5 元' },
+        { year: 2011, label: '9 元' },
+        { year: 2026, label: '16 元' },
+      ],
+      compactEvents: [1999, 2003, 2011, 2026],
+      ariaLabel: '麦当劳麦辣鸡翅一对价格 1999-2026',
+      tooltip: mcdTooltip
+    });
+  }
+
+  function renderMcdHundredChart() {
+    const el = $('#mcdHundredChart');
     if (!el) return;
     const rows = mcdAnnualRows().map(r => Object.assign({}, r, { hundred: 100 / r.price }));
     drawChart(el, {
       rows,
-      series: [{ key: 'hundred', label: '100 元买几对', color: '#b23b2e', area: true, width: 2, step: true }],
+      series: [{ key: 'hundred', label: '100 元买几对', color: '#a97a24', area: true, width: 2 }],
       area: true,
-      areaColor: '#b23b2e',
-      step: true,
+      areaColor: '#a97a24',
       shadeNegative: false,
       xType: 'year',
       xStep: 5,
@@ -917,17 +947,13 @@
       yStep: 2,
       events: [
         { year: 1999, label: '14.3 对' },
-        { year: 2003, label: '20 对' },
+        { year: 2000, label: '20 对' },
         { year: 2011, label: '11.1 对' },
         { year: 2026, label: '6.25 对' },
       ],
-      compactEvents: [1999, 2003, 2011, 2026],
+      compactEvents: [1999, 2000, 2011, 2026],
       ariaLabel: '100元能买几对麦当劳麦辣鸡翅 1999-2026',
-      tooltip: (r) => '<b>' + r.year + ' 年</b>' +
-        '<div class="tip-row"><span>一对价格</span><em>¥' + fmt(r.price, 0) + '</em></div>' +
-        '<div class="tip-row"><span>100 元买</span><em>' + (100 / r.price).toFixed(2) + ' 对</em></div>' +
-        '<div class="tip-row"><span>性质</span><em>' + r.kind + '</em></div>' +
-        '<div class="tip-row"><span>备注</span><em>' + r.note + '</em></div>'
+      tooltip: mcdTooltip
     });
   }
 
@@ -1106,7 +1132,8 @@
     renderMonthlyChart();
     renderHouseChart();
     renderPriceChart();
-    renderMcdChart();
+    renderMcdPriceChart();
+    renderMcdHundredChart();
     renderGoldChart();
     renderGoldOilChart();
   }
