@@ -990,6 +990,34 @@
     });
   }
 
+  function renderDailyMarket(d) {
+    const rows = (APP.goldOil || []);
+    const annual = rows.length ? rows[rows.length - 1] : null;
+    const gold = d && isNum(d.goldUsd) ? d.goldUsd : (annual ? annual.goldUsd : null);
+    const oil = d && isNum(d.oilUsd) ? d.oilUsd : (annual ? annual.oilUsd : null);
+    const ratio = (isNum(gold) && isNum(oil) && oil > 0) ? gold / oil : (annual ? annual.ratio : null);
+    $('#dailyRatio').textContent = isNum(ratio) ? fmt(ratio, 1) : '—';
+    $('#dailyGold').textContent = isNum(gold) ? '$' + fmt(gold, 0) + ' / oz' : '—';
+    $('#dailyOil').textContent = isNum(oil) ? '$' + fmt(oil, 2) + ' / 桶' : '—';
+    const live = !!(d && d.live);
+    const date = d && d.asOf ? d.asOf : (annual ? annual.year + ' 年度' : '—');
+    $('#dailyRatioDate').textContent = live ? ('每日更新 · ' + date) : ('年度参考 · ' + date + ' · 等待每日价格');
+    $('#dailyOilSrc').innerHTML = live
+      ? '<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold.org</a> · <a href="https://fred.stlouisfed.org/series/DCOILWTICO" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">FRED WTI</a>'
+      : '年度均价参考';
+  }
+
+  async function loadDailyMarket() {
+    try {
+      const res = await fetch('daily_market.json?ts=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = await res.json();
+      renderDailyMarket(d);
+    } catch (e) {
+      renderDailyMarket(null);
+    }
+  }
+
   function renderGoldOilStats() {
     const rows = (APP.goldOil || []).slice();
     if (!rows.length) return;
@@ -1091,6 +1119,7 @@
       ['一年期定存', 'PBOC 基准利率历史；2015 年后取主要银行一年期挂牌利率（当前 0.95%）', [['PBOC 利率历史', 'http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html']], '1950—2026'],
       ['平均工资', '国家统计局城镇非私营单位就业人员年平均工资；2026 为估算', [['2025 年平均工资公告', 'https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html']], '1950—2026'],
       ['大米 / 猪肉 / 居民用电', '国家统计局历年《中国统计年鉴》及地方价格资料；长周期零售价为整理/估算', [['NBS 统计年鉴', 'https://www.stats.gov.cn/sj/ndsj/']], '1950—2026'],
+      ['每日金油比', '黄金现货用 Gold API；WTI 用 FRED / Yahoo 最近日收盘；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '每日'],
       ['黄金价格', 'Gold.org / LBMA 历史金价；人民币价格按当年 USD/CNY 折算', [['Gold.org', 'https://www.gold.org/goldhub/data/gold-prices'], ['历史金价数据集', 'https://github.com/datasets/gold-prices']], '1949—2026'],
       ['WTI 原油', 'FRED DCOILWTICO 年度均价', [['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '1949—2026'],
       ['USD/CNY 汇率', 'FRED DEXCHUS 年度均价；早期为官方汇率', [['FRED 汇率', 'https://fred.stlouisfed.org/series/DEXCHUS']], '1949—2026'],
@@ -1595,6 +1624,7 @@
     renderSources();
     renderAll();
     fillCalculator(true);
+    loadDailyMarket();
     bind();
     setupNav();
     setTimeout(() => loadRemoteLatest(false), 900);
