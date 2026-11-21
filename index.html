@@ -754,6 +754,27 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
 .mcd-source-row .imglink{color:var(--red);margin-left:4px}
 @media(max-width:700px){.mcd-charts{grid-template-columns:1fr}.mcd-source-list{grid-template-columns:1fr}#mcdPriceChart,#mcdHundredChart{min-height:250px}}
 
+/* ---------- daily gold/oil ratio ---------- */
+.daily-oil-card{padding:22px 23px 15px;margin-bottom:14px;border-left:2px solid var(--gold)}
+.daily-oil-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.daily-oil-head h3{font-family:var(--serif);font-size:24px;margin:0;letter-spacing:-.02em}
+.daily-oil-head p{font-size:9px;color:var(--muted);margin:5px 0 0}
+.daily-oil-big{text-align:right;flex:0 0 auto}
+.daily-oil-big b{font-family:var(--serif);font-size:52px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.daily-oil-big span{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+.daily-oil-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.daily-oil-grid div{border:1px solid var(--line-soft);border-radius:10px;padding:8px 10px;background:rgba(246,241,231,.5)}
+.daily-oil-grid span{display:block;font-size:7.5px;color:var(--muted)}
+.daily-oil-grid b{display:block;font-family:var(--mono);font-size:12px;font-weight:500;margin-top:3px;color:var(--ink-2)}
+.daily-oil-card .chart-foot{margin-top:9px}
+@media(max-width:700px){
+  .daily-oil-card{padding:15px 14px 12px;border-radius:16px}
+  .daily-oil-head{flex-direction:column;gap:7px}
+  .daily-oil-big{text-align:left}
+  .daily-oil-big b{font-size:44px}
+  .daily-oil-grid{grid-template-columns:1fr 1fr;gap:6px}
+}
+
 </style>
 </head>
 <body>
@@ -1122,6 +1143,23 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
         <h2>一盎司黄金，换几桶油</h2>
         <p>金油比 = 黄金美元/盎司 ÷ WTI 原油美元/桶。它不是官方指标，而是观察黄金与工业周期相对强弱的一把尺。从 1949 年算起，黄金先被固定在 35 美元，1971 年后才真正市场化。</p>
       </div>
+    </div>
+
+    <div class="card daily-oil-card">
+      <div class="daily-oil-head">
+        <div>
+          <div class="section-kicker" style="padding-top:0;margin-bottom:5px">DAILY / 每日</div>
+          <h3>今天一盎司黄金换几桶油</h3>
+          <p id="dailyRatioDate">正在读取每日价格…</p>
+        </div>
+        <div class="daily-oil-big"><b id="dailyRatio">—</b><span>桶 / 盎司</span></div>
+      </div>
+      <div class="daily-oil-grid">
+        <div><span>黄金现货</span><b id="dailyGold">—</b></div>
+        <div><span>WTI 原油</span><b id="dailyOil">—</b></div>
+        <div><span>计算</span><b>金价 ÷ 油价</b></div>
+      </div>
+      <div class="chart-foot"><span>每日收盘后更新 · 黄金现货 / WTI 最近日收盘</span><span id="dailyOilSrc">—</span></div>
     </div>
 
     <div class="card chart-card">
@@ -2316,6 +2354,34 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
     });
   }
 
+  function renderDailyMarket(d) {
+    const rows = (APP.goldOil || []);
+    const annual = rows.length ? rows[rows.length - 1] : null;
+    const gold = d && isNum(d.goldUsd) ? d.goldUsd : (annual ? annual.goldUsd : null);
+    const oil = d && isNum(d.oilUsd) ? d.oilUsd : (annual ? annual.oilUsd : null);
+    const ratio = (isNum(gold) && isNum(oil) && oil > 0) ? gold / oil : (annual ? annual.ratio : null);
+    $('#dailyRatio').textContent = isNum(ratio) ? fmt(ratio, 1) : '—';
+    $('#dailyGold').textContent = isNum(gold) ? '$' + fmt(gold, 0) + ' / oz' : '—';
+    $('#dailyOil').textContent = isNum(oil) ? '$' + fmt(oil, 2) + ' / 桶' : '—';
+    const live = !!(d && d.live);
+    const date = d && d.asOf ? d.asOf : (annual ? annual.year + ' 年度' : '—');
+    $('#dailyRatioDate').textContent = live ? ('每日更新 · ' + date) : ('年度参考 · ' + date + ' · 等待每日价格');
+    $('#dailyOilSrc').innerHTML = live
+      ? '<a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Gold.org</a> · <a href="https://fred.stlouisfed.org/series/DCOILWTICO" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">FRED WTI</a>'
+      : '年度均价参考';
+  }
+
+  async function loadDailyMarket() {
+    try {
+      const res = await fetch('daily_market.json?ts=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = await res.json();
+      renderDailyMarket(d);
+    } catch (e) {
+      renderDailyMarket(null);
+    }
+  }
+
   function renderGoldOilStats() {
     const rows = (APP.goldOil || []).slice();
     if (!rows.length) return;
@@ -2417,6 +2483,7 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
       ['一年期定存', 'PBOC 基准利率历史；2015 年后取主要银行一年期挂牌利率（当前 0.95%）', [['PBOC 利率历史', 'http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125440/125838/125888/index.html']], '1950—2026'],
       ['平均工资', '国家统计局城镇非私营单位就业人员年平均工资；2026 为估算', [['2025 年平均工资公告', 'https://www.stats.gov.cn/sj/zxfb/202605/t20260515_1963707.html']], '1950—2026'],
       ['大米 / 猪肉 / 居民用电', '国家统计局历年《中国统计年鉴》及地方价格资料；长周期零售价为整理/估算', [['NBS 统计年鉴', 'https://www.stats.gov.cn/sj/ndsj/']], '1950—2026'],
+      ['每日金油比', '黄金现货用 Gold API；WTI 用 FRED / Yahoo 最近日收盘；GitHub Actions 每日更新 daily_market.json', [['Gold API', 'https://gold-api.com/'], ['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '每日'],
       ['黄金价格', 'Gold.org / LBMA 历史金价；人民币价格按当年 USD/CNY 折算', [['Gold.org', 'https://www.gold.org/goldhub/data/gold-prices'], ['历史金价数据集', 'https://github.com/datasets/gold-prices']], '1949—2026'],
       ['WTI 原油', 'FRED DCOILWTICO 年度均价', [['FRED WTI', 'https://fred.stlouisfed.org/series/DCOILWTICO']], '1949—2026'],
       ['USD/CNY 汇率', 'FRED DEXCHUS 年度均价；早期为官方汇率', [['FRED 汇率', 'https://fred.stlouisfed.org/series/DEXCHUS']], '1949—2026'],
@@ -2921,6 +2988,7 @@ footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 44px;colo
     renderSources();
     renderAll();
     fillCalculator(true);
+    loadDailyMarket();
     bind();
     setupNav();
     setTimeout(() => loadRemoteLatest(false), 900);
