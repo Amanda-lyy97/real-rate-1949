@@ -20,6 +20,16 @@ def gold():
         raise ValueError('gold price missing')
     return float(d['price']), d.get('updatedAt') or datetime.now(timezone.utc).isoformat()
 
+def wti_cnbc():
+    url = ('https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol'
+           '?symbols=@CL.1&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json&events=1')
+    raw = get(url, timeout=20)
+    d = json.loads(raw)
+    q = d['FormattedQuoteResult']['FormattedQuote'][0]
+    v = float(q['last'])
+    stamp = q.get('last_time') or ''
+    return v, stamp[:10] or datetime.now(timezone.utc).date().isoformat()
+
 def wti_fred():
     raw = get('https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO')
     rows = list(csv.reader(raw.splitlines()))
@@ -49,7 +59,7 @@ def main():
     except Exception as e:
         print('gold failed:', e); return 1
     oil = None; od = None
-    for fn, name in [(wti_fred, 'FRED'), (wti_yahoo, 'Yahoo')]:
+    for fn, name in [(wti_cnbc, 'CNBC'), (wti_fred, 'FRED'), (wti_yahoo, 'Yahoo')]:
         try:
             oil, od = fn()
             print('WTI source:', name, oil, od)
@@ -64,7 +74,7 @@ def main():
         'oilUsd': round(oil, 2),
         'ratio': round(g / oil, 2),
         'live': True,
-        'source': 'Gold API + FRED/Yahoo WTI',
+        'source': 'Gold API + CNBC WTI',
         'goldAt': gat,
     }
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
