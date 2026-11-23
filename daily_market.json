@@ -1,9 +1,9 @@
 {
-  "asOf": "2026-11-21",
-  "goldUsd": 3539.0,
-  "oilUsd": 83.62,
-  "ratio": 42.32,
+  "asOf": "2026-11-22",
+  "goldUsd": 3604.2,
+  "oilUsd": 83.26,
+  "ratio": 43.29,
   "live": true,
   "source": "Gold API + CNBC WTI",
-  "goldAt": "2026-11-22T02:00:09Z"
+  "goldAt": "2026-11-23T02:10:41Z"
 }
