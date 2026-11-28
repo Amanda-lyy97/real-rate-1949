@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-27T02:19:09.842559+00:00",
+  "updatedAt": "2026-11-28T02:14:25.321340+00:00",
   "latestMonth": "2026-10",
   "year": 2026,
   "monthly": {
@@ -39,6 +39,6 @@
     "houseYtd": -3.6500000000000057
   },
   "errors": [],
-  "elapsed": 43.5,
+  "elapsed": 25.3,
   "status": "ok"
 }
